@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Esecurity</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <style>
+      body {
+        font: 16px/1.6 "Helvetica Neue", arial, sans-serif;
+        padding: 60px;
+      }
+      pre { font-size: 14px; line-height: 1.3 }
+      code .init { color: #2F6FAD }
+      code .string { color: #5890AD }
+      code .keyword { color: #8A6343 }
+      code .number { color: #2F6FAD }
+    </style>
+    <script>
+      $(function(){
+        $('code').each(function(){
+          $(this).html(highlight($(this).text()));
+        });
+      });
+
+      function highlight(js) {
+        return js
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\/\/(.*)/gm, '<span class="comment">//$1</span>')
+          .replace(/('.*')/gm, '<span class="string">$1</span>')
+          .replace(/(\d+\.\d+)/gm, '<span class="number">$1</span>')
+          .replace(/(\d+)/gm, '<span class="number">$1</span>')
+          .replace(/\bnew *(\w+)/gm, '<span class="keyword">new</span> <span class="init">$1</span>')
+          .replace(/\b(function|new|throw|return|var|if|else)\b/gm, '<span class="keyword">$1</span>')
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Esecurity</h1>
+    <p>The esecurity test suite.</p>
+    <section class="suite">
+      <h1>angularXsrf</h1>
+      <dl>
+req: e94cfb33e859c6f5572be11e4ecbef96760acfd0
+session: e94cfb33e859c6f5572be11e4ecbef96760acfd0
+        <dt>should work with a valid token</dt>
+        <dd><pre><code>var app = express();
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'esecurity test' }));
+app.use(express.bodyParser());
+app.use(esecurity.angularXsrf());
+
+app.use(function(req, res){
+  res.end(req.xsrfToken() || 'none');
+});
+
+request(app)
+.get('/')
+.end(function(err, res) {
+    var token = res.text;
+    
+    var requestApp = request(app).post('/');
+    
+    res.headers['set-cookie'].forEach(function(cookie) {
+        requestApp.set('Cookie', cookie);
+    });
+    
+    requestApp.set('X-XSRF-Token', token)
+    .expect(200, done);
+});</code></pre></dd>
+req: An invalid token
+session: f5aeb94af820f4fa189380904fe06f9f318fe99a
+        <dt>should fail with an invalid token</dt>
+        <dd><pre><code>var app = express();
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'esecurity test' }));
+app.use(express.bodyParser());
+app.use(esecurity.angularXsrf());
+
+app.use(function(req, res){
+  res.end(req.xsrfToken() || 'none');
+});
+
+request(app)
+.get('/')
+.end(function(err, res) {
+    var token = &quot;An invalid token&quot;;
+    
+    var requestApp = request(app).post('/');
+    
+    res.headers['set-cookie'].forEach(function(cookie) {
+        requestApp.set('Cookie', cookie);
+    });
+    
+    requestApp.set('X-XSRF-Token', token)
+    .expect(403, done);
+});</code></pre></dd>
+req: false
+session: 55cb554393f669c9a31f4708ecab61df9e6b4163
+        <dt>should fail with no token</dt>
+        <dd><pre><code>var app = express();
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'esecurity test' }));
+app.use(express.bodyParser());
+app.use(esecurity.angularXsrf());
+
+app.use(function(req, res){
+  res.end(req.xsrfToken() || 'none');
+});
+
+request(app)
+.get('/')
+.end(function(err, res) {
+    var token = &quot;&quot;;
+    
+    var requestApp = request(app).post('/');
+    
+    res.headers['set-cookie'].forEach(function(cookie) {
+        requestApp.set('Cookie', cookie);
+    });
+    
+    requestApp.set('X-XSRF-Token', token)
+    .expect(403, done);
+});</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>clickJacking</h1>
+      <dl>
+        <dt>should work with DENY</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.clickJacking({
+    deny: true
+}));
+
+request(app)
+.get('/')
+.expect('x-frame-options', 'DENY', done);</code></pre></dd>
+        <dt>should fetch js file</dt>
+        <dd><pre><code>var app = express();
+
+var url = &quot;/my_js_url.js&quot;;
+app.use(esecurity.clickJacking({
+    jsUrl: url
+}));
+
+request(app)
+.get(url)
+.expect(200, done);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>cors</h1>
+      <dl>
+        <section class="suite">
+          <h1>with credentials</h1>
+          <dl>
+            <section class="suite">
+              <h1>preflight request</h1>
+              <dl>
+                <dt>should work with a valid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: '*',
+    credentials: true,
+    methods: ['POST'],
+    headers: ['X-PINGOTHER'],
+    exposeHeaders: ['X-PINGOTHER'],
+    maxAge: 60
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.options('/')
+.set('Origin', originAllowed)
+.set('Access-Control-Request-Method', 'POST')
+.set('Access-Control-Request-Headers', 'X-PINGOTHER')
+.expect('access-control-allow-credentials', 'true')
+.expect('access-control-allow-methods', 'POST')
+.expect('access-control-allow-headers', 'X-PINGOTHER')
+.expect('access-control-max-age', '60')
+.expect('access-control-expose-headers', 'X-PINGOTHER')
+.expect('access-control-allow-origin', originAllowed)
+.expect(204, done);</code></pre></dd>
+                <dt>should fail with an invalid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed,
+    credentials: true,
+    methods: ['POST'],
+    headers: ['X-PINGOTHER'],
+    exposeHeaders: ['X-PINGOTHER'],
+    maxAge: 60
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.options('/')
+.set('Origin', 'http://evil.com')
+.end(function(err, res) {
+    res.headers.should.not.have.property('access-control-allow-credentials');
+    res.headers.should.not.have.property('access-control-request-methods');
+    res.headers.should.not.have.property('access-control-request-headers');
+    res.headers.should.not.have.property('access-control-max-age');
+    res.headers.should.not.have.property('access-control-expose-headers');
+    res.headers.should.not.have.property('access-control-allow-origin');
+    res.statusCode.should.equal(200);
+    done();
+});</code></pre></dd>
+              </dl>
+            </section>
+            <section class="suite">
+              <h1>desired request</h1>
+              <dl>
+                <dt>should work with a valid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed,
+    credentials: true
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Origin', originAllowed)
+.expect('access-control-allow-origin', originAllowed)
+.expect('access-control-allow-credentials', 'true', done);</code></pre></dd>
+                <dt>should fail with an invalid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed,
+    credentials: true
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Origin', 'http://evil.com')
+.end(function(err, res) {
+    res.headers.should.not.have.property('access-control-allow-origin');
+    res.headers.should.not.have.property('access-control-allow-credentials');
+    done();
+});</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>without credentials</h1>
+          <dl>
+            <section class="suite">
+              <h1>preflight request</h1>
+              <dl>
+                <dt>should work with a valid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed,
+    methods: ['POST'],
+    headers: ['X-PINGOTHER'],
+    exposeHeaders: ['X-PINGOTHER'],
+    maxAge: 60
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.options('/')
+.set('Origin', originAllowed)
+.set('Access-Control-Request-Method', 'POST')
+.set('Access-Control-Request-Headers', 'X-PINGOTHER')
+.expect('access-control-allow-methods', 'POST')
+.expect('access-control-allow-headers', 'X-PINGOTHER')
+.expect('access-control-max-age', '60')
+.expect('access-control-expose-headers', 'X-PINGOTHER')
+.expect('access-control-allow-origin', originAllowed)
+.expect(204, done)
+/*.end(function(err, res) {
+    console.log(res.headers);
+    done();
+});*/</code></pre></dd>
+                <dt>should fail with an invalid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed,
+    methods: ['POST'],
+    headers: ['X-PINGOTHER'],
+    exposeHeaders: ['X-PINGOTHER'],
+    maxAge: 60
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.options('/')
+.set('Origin', 'http://evil.com')
+.end(function(err, res) {
+    res.headers.should.not.have.property('access-control-allow-origin');
+    res.headers.should.not.have.property('access-control-request-method');
+    res.headers.should.not.have.property('access-control-request-headers');
+    res.headers.should.not.have.property('access-control-max-age');
+    res.headers.should.not.have.property('access-control-expose-headers');
+    res.statusCode.should.equal(200);
+    done();
+});</code></pre></dd>
+              </dl>
+            </section>
+            <section class="suite">
+              <h1>desired request</h1>
+              <dl>
+                <dt>should work with a valid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Origin', originAllowed)
+.expect('Access-Control-Allow-Origin', originAllowed, done);</code></pre></dd>
+                <dt>should fail with an invalid request</dt>
+                <dd><pre><code>var app = express();
+
+var originAllowed = 'http://domain.com';
+app.use(esecurity.cors({
+    origin: originAllowed
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Origin', 'http://evil.com')
+.end(function(err, res) {
+    res.headers.should.not.have.property('access-control-allow-origin');
+    done();
+});</code></pre></dd>
+              </dl>
+            </section>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>CSP</h1>
+      <dl>
+        <section class="suite">
+          <h1>with reportOnly</h1>
+          <dl>
+            <dt>should work with standard header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    reportOnly: true
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with experimental header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    headers: [&quot;experimental&quot;],
+    reportOnly: true
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;x-content-security-policy-report-only&quot;, &quot;&quot;)
+.expect(&quot;x-webkit-csp-report-only&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with both standard and experimental header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    headers: [&quot;standard&quot;, &quot;experimental&quot;],
+    reportOnly: true
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;&quot;)
+.expect(&quot;x-content-security-policy-report-only&quot;, &quot;&quot;)
+.expect(&quot;x-webkit-csp-report-only&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with rules_secure</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    reportOnly: true,
+    rules_secure: true
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;default-src 'none';script-src 'self' www.google-analytics.com ajax.googleapis.com;style-src 'self';img-src 'self';media-src 'self';connect-src 'self'&quot;, done);</code></pre></dd>
+            <dt>should work with script-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    scriptSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;script-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with object-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    objectSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;object-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with style-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    styleSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;style-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with img-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    imgSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;img-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with media-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    mediaSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;media-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with frame-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    frameSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;frame-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with font-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    fontSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;font-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with connect-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    connectSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;connect-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with sandbox</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    sandbox: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;sandbox &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with report-uri</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportOnly: true,
+    reportUri: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy-report-only&quot;, &quot;report-uri &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with posting data to report-uri</dt>
+            <dd><pre><code>var app = express();
+
+var url = &quot;/csp/report&quot;;
+app.use(express.bodyParser());
+app.use(esecurity.csp({
+    reportOnly: true,
+    reportUri: url
+}));
+
+request(app)
+.post(url)
+.send({
+    &quot;csp-report&quot;: {
+        &quot;document-uri&quot;: &quot;http://example.org/page.html&quot;,
+        &quot;referrer&quot;: &quot;http://evil.example.com/haxor.html&quot;,
+        &quot;blocked-uri&quot;: &quot;http://evil.example.com/image.png&quot;,
+        &quot;violated-directive&quot;: &quot;default-src 'self'&quot;,
+        &quot;original-policy&quot;: &quot;default-src 'self'; report-uri http://example.org/csp-report.cgi&quot;
+    }
+})
+.expect(200, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>without reportOnly</h1>
+          <dl>
+            <dt>should work with standard header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp());
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with experimental header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    headers: [&quot;experimental&quot;]
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;x-content-security-policy&quot;, &quot;&quot;)
+.expect(&quot;x-webkit-csp&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with both standard and experimental header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    headers: [&quot;standard&quot;, &quot;experimental&quot;]
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;&quot;)
+.expect(&quot;x-content-security-policy&quot;, &quot;&quot;)
+.expect(&quot;x-webkit-csp&quot;, &quot;&quot;, done);</code></pre></dd>
+            <dt>should work with rules_secure</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.csp({
+    rules_secure: true
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;default-src 'none';script-src 'self' www.google-analytics.com ajax.googleapis.com;style-src 'self';img-src 'self';media-src 'self';connect-src 'self'&quot;, done);</code></pre></dd>
+            <dt>should work with script-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    scriptSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;script-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with object-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    objectSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;object-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with style-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    styleSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;style-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with img-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    imgSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;img-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with media-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    mediaSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;media-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with frame-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    frameSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;frame-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with font-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    fontSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;font-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with connect-src</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    connectSrc: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;connect-src &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with sandbox</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    sandbox: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;sandbox &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with report-uri</dt>
+            <dd><pre><code>var app = express();
+
+var src = [&quot;'self'&quot;, &quot;http://www.example.org/js/*&quot;];
+app.use(esecurity.csp({
+    reportUri: src
+}));
+
+request(app)
+.get(&quot;/&quot;)
+.expect(&quot;content-security-policy&quot;, &quot;report-uri &quot; + src.join(&quot; &quot;), done);</code></pre></dd>
+            <dt>should work with posting data to report-uri</dt>
+            <dd><pre><code>var app = express();
+
+var url = &quot;/csp/report&quot;;
+app.use(express.bodyParser());
+app.use(esecurity.csp({
+    reportUri: url
+}));
+
+request(app)
+.post(url)
+.send({
+    &quot;csp-report&quot;: {
+        &quot;document-uri&quot;: &quot;http://example.org/page.html&quot;,
+        &quot;referrer&quot;: &quot;http://evil.example.com/haxor.html&quot;,
+        &quot;blocked-uri&quot;: &quot;http://evil.example.com/image.png&quot;,
+        &quot;violated-directive&quot;: &quot;default-src 'self'&quot;,
+        &quot;original-policy&quot;: &quot;default-src 'self'; report-uri http://example.org/csp-report.cgi&quot;
+    }
+})
+.expect(200, done);</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>filterReq</h1>
+      <dl>
+        <section class="suite">
+          <h1>host option</h1>
+          <dl>
+            <dt>should work with a valid host header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    host: function(host) {
+        return /^www\.domain\.com$/.test(host);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Host', 'www.domain.com')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported host</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    host: function(host) {
+        return /^www\.domain\.com$/.test(host);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Host', 'evil.com')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>useragent option</h1>
+          <dl>
+            <dt>should work with a valid user-agent header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    agent: function(agent) {
+        return /^esecurity$/.test(agent);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('User-Agent', 'esecurity')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported user-agent header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    agent: function(agent) {
+        return /^esecurity$/.test(agent);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('User-Agent', 'bot')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>referer option</h1>
+          <dl>
+            <dt>should work with a valid referer header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    referer: function(referer) {
+        return !/^evil\.com$/.test(referer);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Referer', 'esecurity')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported referer header</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    referer: function(referer) {
+        return !/^evil\.com$/.test(referer);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.set('Referer', 'evil.com')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>method option</h1>
+          <dl>
+            <dt>should work with a valid method</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    method: function(method) {
+        return /^(GET|PUT|DELETE|OPTIONS|HEAD)$/i.test(method);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported method</dt>
+            <dd><pre><code>var app = express();
+
+app.use(express.bodyParser());
+app.use(esecurity.filterReq({
+    method: function(method) {
+        return /^(GET|PUT|DELETE|OPTIONS|HEAD)$/i.test(method);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.post('/')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>url option</h1>
+          <dl>
+            <dt>should work with a valid url</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    url: function(url) {
+        return !/^\/private/i.test(url);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/public')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported url</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    url: function(url) {
+        return !/^\/private/i.test(url);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/private')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>ip option</h1>
+          <dl>
+            <dt>should work with a valid ip</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    ip: function(ip) {
+        return /^127\.0\.0\.1$/i.test(ip);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported ip</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    ip: function(ip) {
+        return /^10\.0\.0\.1$/i.test(ip);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>custom option</h1>
+          <dl>
+            <dt>should work with a valid custom data</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    custom: function(req, res) {
+        var isAjaxUrl = /^\/ajax/.test(req.url);
+        return !isAjaxUrl || (isAjaxUrl &amp;&amp; req.xhr);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/ajax')
+.set('X-Requested-With', 'XMLHttpRequest')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a unsupported custom data</dt>
+            <dd><pre><code>var app = express();
+
+app.use(esecurity.filterReq({
+    custom: function(req, res) {
+        var isAjaxUrl = /^\/ajax/.test(req.url);
+        return !isAjaxUrl || (isAjaxUrl &amp;&amp; req.xhr);
+    }
+}));
+        
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/ajax')
+.expect(403, done);</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>HSTC</h1>
+      <dl>
+        <dt>should work without subdomains</dt>
+        <dd><pre><code>var app = express();
+
+app.use(function(req, res, next) {
+    req._esecurity_hsts_test_bypass_ssl = true;
+    return next();
+});
+app.use(esecurity.hsts({
+    maxAge: 60
+}));
+
+request(app)
+.get('/')
+.expect('strict-transport-security', 'max-age=60', done);</code></pre></dd>
+        <dt>should work with subdomains</dt>
+        <dd><pre><code>var app = express();
+
+app.use(function(req, res, next) {
+    req._esecurity_hsts_test_bypass_ssl = true;
+    return next();
+});
+app.use(esecurity.hsts({
+    maxAge: 60,
+    includeSudomains: true
+}));
+
+request(app)
+.get('/')
+.expect('strict-transport-security', 'max-age=60;includeSubDomains', done);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>mimeSniffing</h1>
+      <dl>
+        <dt>should work</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.mimeSniffing());
+
+request(app)
+.get('/')
+.expect('x-content-type-options', 'nosniff', done);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>rate</h1>
+      <dl>
+        <dt>with headers disabled</dt>
+        <dd><pre><code>it('should work with a valid rate limit', function(done) {
+    var app = express();
+
+    app.use(esecurity.zoneLimit({
+        rate: 1,
+        window: 4
+    }));
+    
+    app.use(function(req, res){
+      res.end('none');
+    });
+
+    request(app)
+    .get('/')
+    .expect(200, done);
+    
+});
+      
+it('should fail with a rate limit reached', function(done) {
+    var app = express();
+
+    app.use(esecurity.zoneLimit({
+        rate: 1,
+        window: 4
+    }));
+    
+    app.use(function(req, res){
+      res.end('none');
+    });
+
+    request(app)
+    .get('/')
+    .end(function(err, res) {
+        request(app)
+        .get('/')
+        .expect(429, done);
+    });
+});</code></pre></dd>
+        <dt>with headers enabled</dt>
+        <dd><pre><code>it('should work with a valid rate limit', function(done) {
+    var app = express();
+
+    var rateVal = 1, windowVal = 4;
+    app.use(esecurity.zoneLimit({
+        rate: rateVal,
+        window: windowVal,
+        enableHeaders: true
+    }));
+    
+    app.use(function(req, res){
+      res.end('none');
+    });
+
+    request(app)
+    .get('/')
+    .expect(200, done);
+    
+});
+      
+it('should fail with a rate limit reached', function(done) {
+    var app = express();
+    
+    var rateVal = 1, windowVal = 4;
+    app.use(esecurity.zoneLimit({
+        rate: rateVal,
+        window: windowVal,
+        enableHeaders: true
+    }));
+    
+    app.use(function(req, res){
+      res.end('none');
+    });
+
+    request(app)
+    .get('/')
+    .expect('X-Rate-Limit-Limit', rateVal)
+    .expect('X-Rate-Limit-Remaining', Math.max(0, rateVal - 1))
+    .end(function(err, res) {
+        request(app)
+        .get('/')
+        .expect('X-Rate-Limit-Limit', rateVal)
+        .expect('X-Rate-Limit-Remaining', Math.max(0, rateVal - 2))
+        .expect(429, done);
+    });
+});</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>XSS</h1>
+      <dl>
+        <dt>should work with block mode</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.xss());
+
+request(app)
+.get('/')
+.expect('x-xss-protection', '1;mode=block', done);</code></pre></dd>
+        <dt>should work without block</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.xss({ blockMode: false }));
+
+request(app)
+.get('/')
+.expect('x-xss-protection', '1', done);</code></pre></dd>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>zoneLimit</h1>
+      <dl>
+        <dt>should work with a valid zone limit</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.zoneLimit({
+    rate: 1,
+    window: 4
+}));
+
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.expect(200, done);</code></pre></dd>
+        <dt>should fail with a zone limit reached</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.zoneLimit({
+    rate: 1,
+    window: 4
+}));
+
+app.use(function(req, res){
+  res.end('none');
+});
+
+request(app)
+.get('/')
+.end(function(err, res) {
+    request(app)
+    .get('/')
+    .expect(429, done);
+});</code></pre></dd>
+      </dl>
+    </section>
+    </body>
+</html>

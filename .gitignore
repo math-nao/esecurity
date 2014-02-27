@@ -1,0 +1,15 @@
+coverage.html
+lib-cov
+.coverage_data
+cover_html
+.DS_Store
+pids
+logs
+results
+*.pid
+*.gz
+*.log
+node_modules
+.idea
+*.iml
+*~
