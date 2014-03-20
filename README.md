@@ -1,6 +1,6 @@
 # esecurity [![Build Status](https://secure.travis-ci.org/math-nao/esecurity.png)](http://travis-ci.org/math-nao/esecurity)
 
-Security middleware for express framework (xsrf, xss, clickjacking...).
+Security middlewares for express framework (xsrf, xss, clickjacking...).
 
 ## Installation
 
