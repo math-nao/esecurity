@@ -8,7 +8,7 @@ Security middleware for express framework (xsrf, xss, clickjacking...).
   npm install esecurity
 ```
 
-## Modules
+## Middlewares
 
 ### CORS
 Cross-site HTTP requests are HTTP requests for resources from a domain different of the resource making the request.
