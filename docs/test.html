@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Esecurity</title>
+    <title>Basic Server project</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
     <style>
       body {
@@ -35,13 +35,12 @@
     </script>
   </head>
   <body>
-    <h1>Esecurity</h1>
-    <p>The esecurity test suite.</p>
+    <h1>Basic Server project</h1>
+    <p>The Basic Server project test suite.</p>
+make[1]: Entering directory `/home/nao/Documents/projects/basicServer/esecurity'
     <section class="suite">
       <h1>angularXsrf</h1>
       <dl>
-req: e94cfb33e859c6f5572be11e4ecbef96760acfd0
-session: e94cfb33e859c6f5572be11e4ecbef96760acfd0
         <dt>should work with a valid token</dt>
         <dd><pre><code>var app = express();
 
@@ -68,8 +67,6 @@ request(app)
     requestApp.set('X-XSRF-Token', token)
     .expect(200, done);
 });</code></pre></dd>
-req: An invalid token
-session: f5aeb94af820f4fa189380904fe06f9f318fe99a
         <dt>should fail with an invalid token</dt>
         <dd><pre><code>var app = express();
 
@@ -96,8 +93,6 @@ request(app)
     requestApp.set('X-XSRF-Token', token)
     .expect(403, done);
 });</code></pre></dd>
-req: false
-session: 55cb554393f669c9a31f4708ecab61df9e6b4163
         <dt>should fail with no token</dt>
         <dd><pre><code>var app = express();
 
@@ -139,10 +134,31 @@ app.use(esecurity.clickJacking({
 request(app)
 .get('/')
 .expect('x-frame-options', 'DENY', done);</code></pre></dd>
+        <dt>should work with SAMEORIGIN</dt>
+        <dd><pre><code>var app = express();
+
+app.use(esecurity.clickJacking({
+    sameOrigin: true
+}));
+
+request(app)
+.get('/')
+.expect('x-frame-options', 'SAMEORIGIN', done);</code></pre></dd>
+        <dt>should work with ALLOW-FROM</dt>
+        <dd><pre><code>var app = express();
+
+var testDomain = 'http://www.example.org';
+app.use(esecurity.clickJacking({
+    allowFrom: testDomain
+}));
+
+request(app)
+.get('/')
+.expect('x-frame-options', 'ALLOW-FROM ' + testDomain, done);</code></pre></dd>
         <dt>should fetch js file</dt>
         <dd><pre><code>var app = express();
 
-var url = &quot;/my_js_url.js&quot;;
+var url = '/my_js_url.js';
 app.use(esecurity.clickJacking({
     jsUrl: url
 }));
@@ -1078,92 +1094,96 @@ request(app)
     <section class="suite">
       <h1>rate</h1>
       <dl>
-        <dt>with headers disabled</dt>
-        <dd><pre><code>it('should work with a valid rate limit', function(done) {
-    var app = express();
+        <section class="suite">
+          <h1>with headers disabled</h1>
+          <dl>
+            <dt>should work with a valid rate limit</dt>
+            <dd><pre><code>var app = express();
 
-    app.use(esecurity.zoneLimit({
-        rate: 1,
-        window: 4
-    }));
-    
-    app.use(function(req, res){
-      res.end('none');
-    });
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'SECRET_KEY' }));
 
-    request(app)
-    .get('/')
-    .expect(200, done);
-    
+app.get('/', esecurity.rate({ rate: 1, window: 4 }), function(req, res, next) {
+    res.end('Hello');
 });
-      
-it('should fail with a rate limit reached', function(done) {
-    var app = express();
 
-    app.use(esecurity.zoneLimit({
-        rate: 1,
-        window: 4
-    }));
-    
-    app.use(function(req, res){
-      res.end('none');
-    });
+request(app)
+.get('/')
+.expect(200, done);</code></pre></dd>
+            <dt>should fail with a reached rate limit</dt>
+            <dd><pre><code>var app = express();
 
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'SECRET_KEY' }));
+
+app.get('/', esecurity.rate({ rate: 1, window: 4 }), function(req, res, next) {
+    res.end('Hello');
+});
+
+request(app)
+.get('/')
+.end(function(err, res) {
     request(app)
     .get('/')
+    .set('Cookie', res.headers['set-cookie'][0].split(';')[0])
+    .expect(429, done);
+});</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>with headers enabled</h1>
+          <dl>
+            <dt>should work with a valid rate limit</dt>
+            <dd><pre><code>var app = express();
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'SECRET_KEY' }));
+
+var rateVal = 1, windowVal = 4;
+app.get('/', esecurity.rate({ rate: rateVal, window: windowVal, enableHeaders: true }), function(req, res, next) {
+    res.end('Hello');
+});
+
+request(app)
+.get('/')
+.expect('x-rate-limit-limit', String(rateVal))
+.expect('x-rate-limit-remaining', String(Math.max(0, rateVal - 1)))
+.end(function(err, res) {
+    res.should.have.status(200);
+    res.header['x-rate-limit-reset'].should.be.approximately(parseInt(Date.now() / 1E3) + windowVal, 5);
+    done();
+});</code></pre></dd>
+            <dt>should fail with a reached rate limit</dt>
+            <dd><pre><code>var app = express();
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'SECRET_KEY' }));
+
+var rateVal = 1, windowVal = 4;
+app.get('/', esecurity.rate({ rate: rateVal, window: windowVal, enableHeaders: true }), function(req, res, next) {
+    res.end('Hello');
+});
+
+request(app)
+.get('/')
+.expect('x-rate-limit-limit', String(rateVal))
+.expect('x-rate-limit-remaining', String(Math.max(0, rateVal - 1)))
+.end(function(err, res) {
+    res.header['x-rate-limit-reset'].should.be.approximately(parseInt(Date.now() / 1E3) + windowVal, 5);
+    
+    request(app)
+    .get('/')
+    .set('Cookie', res.headers['set-cookie'][0].split(';')[0])
+    .expect('x-rate-limit-limit', String(rateVal))
+    .expect('x-rate-limit-remaining', String(Math.max(0, rateVal - 2)))
     .end(function(err, res) {
-        request(app)
-        .get('/')
-        .expect(429, done);
+        res.should.have.status(429);
+        res.header['x-rate-limit-reset'].should.be.approximately(parseInt(Date.now() / 1E3) + windowVal, 5);
+        done();
     });
 });</code></pre></dd>
-        <dt>with headers enabled</dt>
-        <dd><pre><code>it('should work with a valid rate limit', function(done) {
-    var app = express();
-
-    var rateVal = 1, windowVal = 4;
-    app.use(esecurity.zoneLimit({
-        rate: rateVal,
-        window: windowVal,
-        enableHeaders: true
-    }));
-    
-    app.use(function(req, res){
-      res.end('none');
-    });
-
-    request(app)
-    .get('/')
-    .expect(200, done);
-    
-});
-      
-it('should fail with a rate limit reached', function(done) {
-    var app = express();
-    
-    var rateVal = 1, windowVal = 4;
-    app.use(esecurity.zoneLimit({
-        rate: rateVal,
-        window: windowVal,
-        enableHeaders: true
-    }));
-    
-    app.use(function(req, res){
-      res.end('none');
-    });
-
-    request(app)
-    .get('/')
-    .expect('X-Rate-Limit-Limit', rateVal)
-    .expect('X-Rate-Limit-Remaining', Math.max(0, rateVal - 1))
-    .end(function(err, res) {
-        request(app)
-        .get('/')
-        .expect('X-Rate-Limit-Limit', rateVal)
-        .expect('X-Rate-Limit-Remaining', Math.max(0, rateVal - 2))
-        .expect(429, done);
-    });
-});</code></pre></dd>
+          </dl>
+        </section>
       </dl>
     </section>
     <section class="suite">
@@ -1226,5 +1246,6 @@ request(app)
 });</code></pre></dd>
       </dl>
     </section>
+make[1]: Leaving directory `/home/nao/Documents/projects/basicServer/esecurity'
     </body>
 </html>
