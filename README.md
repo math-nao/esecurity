@@ -244,7 +244,7 @@ jsUrl | String | Specify URI to load javascript file containing clickjacking pro
 
 
 ### ZoneLimit
-This module helps you to limit request according ip, cookie or anything you want.
+This module helps you to limit requests according ip, cookie or anything else.
 
 ``` js
     var esecurity = require('esecurity');
@@ -277,7 +277,7 @@ log | Function (msg) | Log denied requests.<div>Default is to not log.</div>
 
 
 ### Rate
-This module helps you to limit request by session and by route. `X-Rate-Limit` headers can be sent to client.
+This module helps you to limit requests by session and by route. `X-Rate-Limit` headers can be sent to client.
 
 ``` js
     var esecurity = require('esecurity');
