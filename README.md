@@ -301,7 +301,7 @@ Option | Value | Description
 ------ | ----- | -----------
 rate | Number | Specify the rate limit ceiling.<div>Default to `100`.</div>
 window | Number | Specify the time window in minutes.<div>Default to `15`.</div>
-enableHeaders | Boolean | Enable response headers (`X-Rate-Limit-Limit`, `X-Rate-Limit-Remaining`, `X-Rate-Limit-Reset`).<div>Default to `false`.</div><div>With:<div>- X-Rate-Limit-Limit: the rate limit ceiling for that given request</div><div>- X-Rate-Limit-Remaining: the number of requests left for the N minute window</div><div>- X-Rate-Limit-Reset: the remaining window before the rate limit resets in UTC epoch seconds</div></div>
+enableHeaders | Boolean | Enable response headers (`X-Rate-Limit-Limit`, `X-Rate-Limit-Remaining`, `X-Rate-Limit-Reset`).<div>Default to `false`.</div><div>With:<div>- `X-Rate-Limit-Limit`: the rate limit ceiling for that given request</div><div>- `X-Rate-Limit-Remaining`: the number of requests left for the N minute window</div><div>- `X-Rate-Limit-Reset`: the remaining window before the rate limit resets in UTC epoch seconds</div></div>
 
 
 ## Run Tests
