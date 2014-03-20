@@ -184,17 +184,17 @@ Option | Value | Description
 ------ | ----- | -----------
 headers | Array | Specify which headers name to add Content-Security-Policy (standard) and/or X-Content-Security-Policy, X-Webkit-CSP (experimental). Possible values are ["standard", "experimental"].<div>Default to `standard`.</div>
 rules_secure | Boolean | Specify whether or not use predefined secure directive rules.<div>Default to `true`.</div>
-defaultSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#default-src" target="blank">default-src</a> directive.
-scriptSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#script-src" target="blank">script-src</a> directive.
-objectSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#object-src" target="blank">object-src</a> directive.
-styleSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#style-src" target="blank">style-src</a> directive.
-imgSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#img-src" target="blank">img-src</a> directive.
-mediaSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#media-src" target="blank">media-src</a> directive.
-frameSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#frame-src" target="blank">frame-src</a> directive.
-fontSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#font-src" target="blank">font-src</a> directive.
-connectSrc | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#connect-src" target="blank">connect-src</a> directive.
-sandbox | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#sandbox" target="blank">sandbox</a> directive.
-reportUri | String | Refer to <a href="https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html#report-uri" target="blank">report-uri</a> directive.
+defaultSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#default-src" target="blank">default-src</a> directive.
+scriptSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#script-src" target="blank">script-src</a> directive.
+objectSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#object-src" target="blank">object-src</a> directive.
+styleSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#style-src" target="blank">style-src</a> directive.
+imgSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#img-src" target="blank">img-src</a> directive.
+mediaSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#media-src" target="blank">media-src</a> directive.
+frameSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#frame-src" target="blank">frame-src</a> directive.
+fontSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#font-src" target="blank">font-src</a> directive.
+connectSrc | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#connect-src" target="blank">connect-src</a> directive.
+sandbox | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#sandbox" target="blank">sandbox</a> directive.
+reportUri | String | Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#report-uri" target="blank">report-uri</a> directive.
 reportOnly | Boolean | indicating whether or not use Content-Security-Policy-Report-Only header field. The Content-Security-Policy-Report-Only header field lets servers experiment with policies by monitoring (rather than enforcing) a policy.<div>Default to `false`.<div>
 reportFilename | String | Filename where to write report data.<div>Default to `/tmp/esecurity_cspreport`</div>
 onReport | Function (msg) | Use to write report data.<div>Default to `function (data) {...}`</div>
