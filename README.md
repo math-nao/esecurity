@@ -69,7 +69,7 @@ __Arguments__
  
 Option | Value | Description
 ------ | ----- | -----------
-blockMode | Boolean | Specify whether or not render only “#” in IE instead of attempting to sanitize the page to surgically remove the XSS attack.<div>Default to true.</div>
+blockMode | Boolean | Specify whether or not render only `#` in IE instead of attempting to sanitize the page to surgically remove the XSS attack.<div>Default to `true`.</div>
 
 
 ### HSTS
@@ -155,7 +155,7 @@ __Arguments__
  
 Option | Value | Description
 ------ | ----- | -----------
-skip | Function, Boolean | Optional directive skipping angularXsrf module if function return "true". Default to function(req, res) {};
+skip | Function, Boolean | Optional directive skipping angularXsrf module if function return `true`. Default to `function(req, res) {};`.
 cookie | Number | Optional. Specify cookie options used in <a href="http://expressjs.com/api.html#res.cookie" target="_blank">res.cookie</a>.
 
 ### Content Security Policy (CSP)
@@ -237,9 +237,9 @@ __Arguments__
  
 Option | Value | Description
 ------ | ----- | -----------
-deny | Boolean | Specify whether or not use DENY x-frame-option.<div>Default to true.</div>
-sameOrigin | Boolean | Specify whether or not use SAMEORIGIN x-frame-option.<div>Default to false.</div>
-allowFrom | String | Specify origin to use in ALLOW-FROM x-frame-option.<div>Default is empty.</div>
+deny | Boolean | Specify whether or not use `DENY` x-frame-option.<div>Default to true.</div>
+sameOrigin | Boolean | Specify whether or not use `SAMEORIGIN` x-frame-option.<div>Default to `false`.</div>
+allowFrom | String | Specify origin to use in `ALLOW-FROM` x-frame-option.<div>Default is empty.</div>
 jsUrl | String | Specify URI to load javascript file containing clickjacking protection.<div>Default to `clickjacking_protection.js`</div>
 
 
@@ -269,9 +269,9 @@ __Arguments__
  
 Option | Value | Description
 ------ | ----- | -----------
-rate | Number | Specify the rate limit ceiling.<div>Default to 100.</div>
-window | Number | Specify the time window in seconds.<div>Default to 5.</div>
-delayGc | Number | Specify the delay in seconds before garbage collector is launched.<div>Default to 20.</div>
+rate | Number | Specify the rate limit ceiling.<div>Default to `100`.</div>
+window | Number | Specify the time window in seconds.<div>Default to `5`.</div>
+delayGc | Number | Specify the delay in seconds before garbage collector is launched.<div>Default to `20`.</div>
 keyZone | Function (req) | Returns name of the zone to catch.<div>Default to `function(req) { return req.ip; };`</div>
 log | Function (msg) | Log denied requests.<div>Default is to not log.</div>
 
@@ -299,16 +299,13 @@ __Arguments__
  
 Option | Value | Description
 ------ | ----- | -----------
-rate | Number | Specify the rate limit ceiling.<div>Default to 100</div>
-window | Number | Specify the time window in minutes.<div>Default to 15;</div>
-enableHeaders | Boolean | Enable response headers (X-Rate-Limit-Limit, X-Rate-Limit-Remaining, X-Rate-Limit-Reset).<div>Default to false;</div><div>With:
- - X-Rate-Limit-Limit: the rate limit ceiling for that given request
- - X-Rate-Limit-Remaining: the number of requests left for the N minute window
- - X-Rate-Limit-Reset: the remaining window before the rate limit resets in UTC epoch seconds</div>
+rate | Number | Specify the rate limit ceiling.<div>Default to `100`.</div>
+window | Number | Specify the time window in minutes.<div>Default to `15`.</div>
+enableHeaders | Boolean | Enable response headers (`X-Rate-Limit-Limit`, `X-Rate-Limit-Remaining`, `X-Rate-Limit-Reset`).<div>Default to `false`.</div><div>With:<div>- X-Rate-Limit-Limit: the rate limit ceiling for that given request</div><div>- X-Rate-Limit-Remaining: the number of requests left for the N minute window</div><div>- X-Rate-Limit-Reset: the remaining window before the rate limit resets in UTC epoch seconds</div></div>
 
 
 ## Run Tests
-Tests are written in vows and give complete coverage of all APIs and storage engines.
+Tests are given complete coverage of all features.
 
 ``` bash
   $ npm test
@@ -317,17 +314,17 @@ Tests are written in vows and give complete coverage of all APIs and storage eng
 
 ## Examples
 
-Clone the Esecurity repo, then install the dev dependencies to install all the example / test suite deps:
+To run examples, clone the Esecurity repo and install the example/test suite dependencies:
 
     $ git clone git://github.com/math-nao/esecurity.git --depth 1
     $ cd esecurity
     $ npm install
 
-then run whichever examples you want:
+then run any example:
 
     $ node examples/cors
 
-You can also view live examples here
+You can also view live examples here:
 
 <a href="https://runnable.com/esecurity" target="_blank"><img src="https://runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
 
