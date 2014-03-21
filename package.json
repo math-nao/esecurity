@@ -1,7 +1,7 @@
 {
   "name": "esecurity",
   "description": "Add security layers to express.",
-  "version": "1.0",
+  "version": "1.0.0",
   "author": "Mathieu Naouache <math.nao@outlook.com>",
   "keywords": [
     "express",
