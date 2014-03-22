@@ -35,9 +35,11 @@ Cross-site HTTP requests are HTTP requests for resources from a domain different
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.cors([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 origin | String | This parameter specifies a URI that may access the resource.<div>Default to `*`.</div>
 credentials | Boolean | Indicates whether or not the response to the request can be exposed when the credentials flag is true.<div>Default to `false`.</div>
@@ -65,9 +67,11 @@ Cross-site scripting (XSS) attacks occur when one website, generally malicious, 
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.xss([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 blockMode | Boolean | Specify whether or not render only `#` in IE instead of attempting to sanitize the page to surgically remove the XSS attack.<div>Default to `true`.</div>
 
@@ -93,9 +97,11 @@ HTTP Strict Transport Security (HSTS) is a web security policy mechanism whereby
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.hsts([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 maxAge | Number | Set the number of seconds, after the reception of the STS header field, during which the UA regards the host (from whom the message was received) as a Known HSTS Host.<div>Default to one year (365 * 24 * 60 * 60).</div>
 includeSudomains | Boolean | Optional directive specifying that this HSTS Policy also applies to any hosts whose domain names are subdomains of the Known HSTS Host's domain name.<div>Default to `false`.</div>
@@ -119,7 +125,7 @@ MimeSniffing attempts to determine the content-type for each downloaded resource
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
 
     None
 
@@ -151,9 +157,11 @@ XSRF is a technique by which an unauthorized site can gain your user's private d
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.angularXsrf([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 skip | Function, Boolean | Optional directive skipping angularXsrf module if function return `true`. Default to `function(req, res) {};`.
 cookie | Number | Optional. Specify cookie options used in <a href="http://expressjs.com/api.html#res.cookie" target="_blank">res.cookie</a>.
@@ -178,9 +186,11 @@ Content Security Policy (CSP) is a computer security concept, to prevent cross-s
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.csp([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 headers | Array | Specify which headers name to add Content-Security-Policy (standard) and/or X-Content-Security-Policy, X-Webkit-CSP (experimental). Possible values are ["standard", "experimental"].<div>Default to `standard`.</div>
 rules_secure | Boolean | Specify whether or not use predefined secure directive rules.<div>Default to `true`.</div>
@@ -233,9 +243,11 @@ With test.html file:
     </html>
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.clickJacking([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 deny | Boolean | Specify whether or not use `DENY` x-frame-option.<div>Default to true.</div>
 sameOrigin | Boolean | Specify whether or not use `SAMEORIGIN` x-frame-option.<div>Default to `false`.</div>
@@ -265,9 +277,11 @@ This module helps you to limit requests according ip, cookie or anything else.
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.zoneLimit([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 rate | Number | Specify the rate limit ceiling.<div>Default to `100`.</div>
 window | Number | Specify the time window in seconds.<div>Default to `5`.</div>
@@ -295,9 +309,11 @@ This module helps you to limit requests by session and by route. `X-Rate-Limit` 
     app.listen(9898);
 ```
 
-__Arguments__
+__Options__
+
+`esecurity.rate([options])`
  
-Option | Value | Description
+Name | Value | Description
 ------ | ----- | -----------
 rate | Number | Specify the rate limit ceiling.<div>Default to `100`.</div>
 window | Number | Specify the time window in minutes.<div>Default to `15`.</div>
