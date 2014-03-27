@@ -31,14 +31,14 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "express": "3.0.x",
-    "supertest": "0.6.0",
+    "express": "3.x",
+    "supertest": "0.x",
     "should": "*",
     "mocha": "*",
     "dox": "*"
   },
   "dependencies": {
-    "generic-pool": "2.0.3"
+    "generic-pool": "2.x"
   },
   "scripts": {
     "test": "make"
