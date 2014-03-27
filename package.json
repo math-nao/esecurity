@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "express": "3.x",
-    "supertest": "0.6.x",
+    "supertest": "0.6.0",
     "should": "*",
     "mocha": "*",
     "dox": "*"
