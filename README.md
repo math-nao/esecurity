@@ -1,5 +1,9 @@
 # esecurity [![Build Status](https://secure.travis-ci.org/math-nao/esecurity.png)](http://travis-ci.org/math-nao/esecurity)
 
+[![Dependencies Status](https://gemnasium.com/math-nao/esecurity.png)](https://gemnasium.com/math-nao/esecurity)
+
+[![NPM infos](https://nodei.co/npm/esecurity.png?downloads=true&stars=true)](https://nodei.co/npm/esecurity)
+
 Security middlewares for express framework (xsrf, xss, clickjacking...).
 
 ## Installation
