@@ -31,8 +31,8 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "express": "3.x",
-    "supertest": "0.6.0",
+    "express": "3.0.x",
+    "supertest": "0.6.x",
     "should": "*",
     "mocha": "*",
     "dox": "*"

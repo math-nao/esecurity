@@ -1,4 +1,4 @@
-# esecurity [![Build Status](https://secure.travis-ci.org/math-nao/esecurity.png)](http://travis-ci.org/math-nao/esecurity) [![Dependencies Status](https://gemnasium.com/math-nao/esecurity.png)](https://gemnasium.com/math-nao/esecurity)
+# esecurity [![Build Status](https://secure.travis-ci.org/math-nao/esecurity.png)](http://travis-ci.org/math-nao/esecurity)
 
 Security middlewares for express framework (xsrf, xss, clickjacking...).
 
