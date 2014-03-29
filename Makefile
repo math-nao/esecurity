@@ -1,4 +1,4 @@
-MOCHA_OPTS= --check-leaks
+MOCHA_OPTS= --check-leaks --globals "setImmediate,clearImmediate"
 REPORTER = dot
 
 check: test
