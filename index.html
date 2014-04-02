@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Esecurity : Security middlewares for express framework." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Esecurity</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/math-nao/esecurity">View on GitHub</a>
+
+          <h1 id="project_title">Esecurity</h1>
+          <h2 id="project_tagline">Security middlewares for express framework.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/math-nao/esecurity/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/math-nao/esecurity/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="esecurity-" class="anchor" href="#esecurity-"><span class="octicon octicon-link"></span></a>esecurity <a href="http://travis-ci.org/math-nao/esecurity"><img src="https://secure.travis-ci.org/math-nao/esecurity.png" alt="Build Status"></a>
+</h1>
+
+<p>Security middlewares for express framework (xsrf, xss, clickjacking...).</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>  npm install esecurity
+</code></pre>
+
+<h2>
+<a name="middlewares" class="anchor" href="#middlewares"><span class="octicon octicon-link"></span></a>Middlewares</h2>
+
+<h3>
+<a name="cors" class="anchor" href="#cors"><span class="octicon octicon-link"></span></a>CORS</h3>
+
+<p>Cross-site HTTP requests are HTTP requests for resources from a domain different of the resource making the request.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">cors</span><span class="p">({</span>
+        <span class="nx">origin</span><span class="o">:</span> <span class="s1">'*'</span><span class="p">,</span>
+        <span class="nx">credentials</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">methods</span><span class="o">:</span> <span class="p">[</span><span class="s1">'POST'</span><span class="p">],</span>
+        <span class="nx">headers</span><span class="o">:</span> <span class="p">[</span><span class="s1">'X-PINGOTHER'</span><span class="p">],</span>
+        <span class="nx">exposeHeaders</span><span class="o">:</span> <span class="p">[</span><span class="s1">'X-PINGOTHER'</span><span class="p">],</span>
+        <span class="nx">maxAge</span><span class="o">:</span> <span class="mi">60</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.cors([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>origin</td>
+<td>String</td>
+<td>This parameter specifies a URI that may access the resource.<div>Default to <code>*</code>.</div>
+</td>
+</tr>
+<tr>
+<td>credentials</td>
+<td>Boolean</td>
+<td>Indicates whether or not the response to the request can be exposed when the credentials flag is true.<div>Default to <code>false</code>.</div>
+</td>
+</tr>
+<tr>
+<td>methods</td>
+<td>Array</td>
+<td>Specifies the method or methods allowed when accessing the resource.<div>Default to <code>['GET', 'PUT', 'POST', 'DELETE']</code>
+</div>
+</td>
+</tr>
+<tr>
+<td>headers</td>
+<td>Array</td>
+<td>Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request.<div>Default to <code>['Origin', 'X-Requested-With', 'Content-Type', 'Accept']</code>.</div>
+</td>
+</tr>
+<tr>
+<td>exposeHeaders</td>
+<td>String</td>
+<td>This parameter lets a server whitelist headers that browsers are allowed to access.<div>Default to <code>false</code>.</div>
+</td>
+</tr>
+<tr>
+<td>maxAge</td>
+<td>Number</td>
+<td>Specify how long the results of a preflight request can be cached.<div>Default to <code>0</code>.</div>
+</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="xss" class="anchor" href="#xss"><span class="octicon octicon-link"></span></a>XSS</h3>
+
+<p>Cross-site scripting (XSS) attacks occur when one website, generally malicious, injects (adds) JavaScript code into otherwise legitimate requests to another website.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">xss</span><span class="p">());</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.xss([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody><tr>
+<td>blockMode</td>
+<td>Boolean</td>
+<td>Specify whether or not render only <code>#</code> in IE instead of attempting to sanitize the page to surgically remove the XSS attack.<div>Default to <code>true</code>.</div>
+</td>
+</tr></tbody>
+</table><h3>
+<a name="hsts" class="anchor" href="#hsts"><span class="octicon octicon-link"></span></a>HSTS</h3>
+
+<p>HTTP Strict Transport Security (HSTS) is a web security policy mechanism whereby a web server declares that complying user agents (such as a web browser) are to interact with it using only secure HTTPS connections (i.e. HTTP layered over TLS/SSL).</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">hsts</span><span class="p">({</span>
+        <span class="nx">maxAge</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="nx">includeSudomains</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.hsts([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>maxAge</td>
+<td>Number</td>
+<td>Set the number of seconds, after the reception of the STS header field, during which the UA regards the host (from whom the message was received) as a Known HSTS Host.<div>Default to one year (365 * 24 * 60 * 60).</div>
+</td>
+</tr>
+<tr>
+<td>includeSudomains</td>
+<td>Boolean</td>
+<td>Optional directive specifying that this HSTS Policy also applies to any hosts whose domain names are subdomains of the Known HSTS Host's domain name.<div>Default to <code>false</code>.</div>
+</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="mimesniffing" class="anchor" href="#mimesniffing"><span class="octicon octicon-link"></span></a>MimeSniffing</h3>
+
+<p>MimeSniffing attempts to determine the content-type for each downloaded resource and therefore can have security issues.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">mimeSniffing</span><span class="p">());</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<pre><code>None
+</code></pre>
+
+<h3>
+<a name="angularxsrf" class="anchor" href="#angularxsrf"><span class="octicon octicon-link"></span></a>AngularXsrf</h3>
+
+<p>XSRF is a technique by which an unauthorized site can gain your user's private data. Angular provides a mechanism to counter XSRF.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">cookieParser</span><span class="p">());</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">session</span><span class="p">({</span> <span class="nx">secret</span><span class="o">:</span> <span class="s1">'esecurity example'</span> <span class="p">}));</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">bodyParser</span><span class="p">());</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">angularXsrf</span><span class="p">({</span>
+        <span class="nx">cookie</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">path</span><span class="o">:</span> <span class="s1">'/'</span><span class="p">,</span>
+            <span class="nx">secure</span><span class="o">:</span> <span class="kc">false</span>
+        <span class="p">}</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.angularXsrf([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>skip</td>
+<td>Function, Boolean</td>
+<td>Optional directive skipping angularXsrf module if function return <code>true</code>. Default to <code>function(req, res) {};</code>.</td>
+</tr>
+<tr>
+<td>cookie</td>
+<td>Number</td>
+<td>Optional. Specify cookie options used in <a href="http://expressjs.com/api.html#res.cookie" target="_blank">res.cookie</a>.</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="content-security-policy-csp" class="anchor" href="#content-security-policy-csp"><span class="octicon octicon-link"></span></a>Content Security Policy (CSP)</h3>
+
+<p>Content Security Policy (CSP) is a computer security concept, to prevent cross-site scripting (XSS) and related attacks.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">csp</span><span class="p">({</span>
+        <span class="nx">scriptSrc</span><span class="o">:</span> <span class="p">[</span><span class="s2">"self"</span><span class="p">,</span> <span class="s2">"www.google-analytics.com"</span><span class="p">]</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.csp([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>headers</td>
+<td>Array</td>
+<td>Specify which headers name to add Content-Security-Policy (standard) and/or X-Content-Security-Policy, X-Webkit-CSP (experimental). Possible values are ["standard", "experimental"].<div>Default to <code>standard</code>.</div>
+</td>
+</tr>
+<tr>
+<td>rules_secure</td>
+<td>Boolean</td>
+<td>Specify whether or not use predefined secure directive rules.<div>Default to <code>true</code>.</div>
+</td>
+</tr>
+<tr>
+<td>defaultSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#default-src" target="blank">default-src</a> directive.</td>
+</tr>
+<tr>
+<td>scriptSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#script-src" target="blank">script-src</a> directive.</td>
+</tr>
+<tr>
+<td>objectSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#object-src" target="blank">object-src</a> directive.</td>
+</tr>
+<tr>
+<td>styleSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#style-src" target="blank">style-src</a> directive.</td>
+</tr>
+<tr>
+<td>imgSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#img-src" target="blank">img-src</a> directive.</td>
+</tr>
+<tr>
+<td>mediaSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#media-src" target="blank">media-src</a> directive.</td>
+</tr>
+<tr>
+<td>frameSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#frame-src" target="blank">frame-src</a> directive.</td>
+</tr>
+<tr>
+<td>fontSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#font-src" target="blank">font-src</a> directive.</td>
+</tr>
+<tr>
+<td>connectSrc</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#connect-src" target="blank">connect-src</a> directive.</td>
+</tr>
+<tr>
+<td>sandbox</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#sandbox" target="blank">sandbox</a> directive.</td>
+</tr>
+<tr>
+<td>reportUri</td>
+<td>String</td>
+<td>Refer to <a href="http://w3c.github.io/webappsec/specs/content-security-policy/csp-specification.dev.html#report-uri" target="blank">report-uri</a> directive.</td>
+</tr>
+<tr>
+<td>reportOnly</td>
+<td>Boolean</td>
+<td>indicating whether or not use Content-Security-Policy-Report-Only header field. The Content-Security-Policy-Report-Only header field lets servers experiment with policies by monitoring (rather than enforcing) a policy.<div>Default to <code>false</code>.<div></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>reportFilename</td>
+<td>String</td>
+<td>Filename where to write report data.<div>Default to <code>/tmp/esecurity_cspreport</code>
+</div>
+</td>
+</tr>
+<tr>
+<td>onReport</td>
+<td>Function (msg)</td>
+<td>Use to write report data.<div>Default to <code>function (data) {...}</code>
+</div>
+</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="clickjacking" class="anchor" href="#clickjacking"><span class="octicon octicon-link"></span></a>ClickJacking</h3>
+
+<p>Clickjacking (User Interface redress attack, UI redress attack, UI redressing) is a malicious technique of tricking a Web user into clicking on something different from what the user perceives they are clicking on, thus potentially revealing confidential information or taking control of their computer while clicking on seemingly innocuous web pages.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">clickJacking</span><span class="p">({</span>
+        <span class="nx">sameOrigin</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/\.js$/i</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">))</span> 
+            <span class="nx">res</span><span class="p">.</span><span class="nx">sendfile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/test.html'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p>With test.html file:</p>
+
+<div class="highlight highlight-html"><pre>    <span class="cp">&lt;!DOCTYPE html&gt;</span>
+    <span class="nt">&lt;html&gt;</span>
+        <span class="nt">&lt;head&gt;</span>
+            <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"clickjacking_protection.js"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/head&gt;</span>
+        <span class="nt">&lt;body&gt;</span>
+            <span class="nt">&lt;pre&gt;</span>Hello world.<span class="nt">&lt;/pre&gt;</span>
+        <span class="nt">&lt;/body&gt;</span>
+    <span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.clickJacking([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>deny</td>
+<td>Boolean</td>
+<td>Specify whether or not use <code>DENY</code> x-frame-option.<div>Default to true.</div>
+</td>
+</tr>
+<tr>
+<td>sameOrigin</td>
+<td>Boolean</td>
+<td>Specify whether or not use <code>SAMEORIGIN</code> x-frame-option.<div>Default to <code>false</code>.</div>
+</td>
+</tr>
+<tr>
+<td>allowFrom</td>
+<td>String</td>
+<td>Specify origin to use in <code>ALLOW-FROM</code> x-frame-option.<div>Default is empty.</div>
+</td>
+</tr>
+<tr>
+<td>jsUrl</td>
+<td>String</td>
+<td>Specify URI to load javascript file containing clickjacking protection.<div>Default to <code>clickjacking_protection.js</code>
+</div>
+</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="zonelimit" class="anchor" href="#zonelimit"><span class="octicon octicon-link"></span></a>ZoneLimit</h3>
+
+<p>This module helps you to limit requests according ip, cookie or anything else.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">esecurity</span><span class="p">.</span><span class="nx">zoneLimit</span><span class="p">({</span>
+        <span class="nx">keyZone</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">req</span><span class="p">.</span><span class="nx">ip</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.zoneLimit([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>rate</td>
+<td>Number</td>
+<td>Specify the rate limit ceiling.<div>Default to <code>100</code>.</div>
+</td>
+</tr>
+<tr>
+<td>window</td>
+<td>Number</td>
+<td>Specify the time window in seconds.<div>Default to <code>5</code>.</div>
+</td>
+</tr>
+<tr>
+<td>delayGc</td>
+<td>Number</td>
+<td>Specify the delay in seconds before garbage collector is launched.<div>Default to <code>20</code>.</div>
+</td>
+</tr>
+<tr>
+<td>keyZone</td>
+<td>Function (req)</td>
+<td>Returns name of the zone to catch.<div>Default to <code>function(req) { return req.ip; };</code>
+</div>
+</td>
+</tr>
+<tr>
+<td>log</td>
+<td>Function (msg)</td>
+<td>Log denied requests.<div>Default is to not log.</div>
+</td>
+</tr>
+</tbody>
+</table><h3>
+<a name="rate" class="anchor" href="#rate"><span class="octicon octicon-link"></span></a>Rate</h3>
+
+<p>This module helps you to limit requests by session and by route. <code>X-Rate-Limit</code> headers can be sent to client.</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">esecurity</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'esecurity'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">cookieParser</span><span class="p">());</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">session</span><span class="p">({</span> <span class="nx">secret</span><span class="o">:</span> <span class="s1">'SECRET_KEY'</span> <span class="p">}));</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">esecurity</span><span class="p">.</span><span class="nx">rate</span><span class="p">({</span> <span class="nx">rate</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">window</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">enableHeaders</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Hello world.'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9898</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Options</strong></p>
+
+<p><code>esecurity.rate([options])</code></p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>rate</td>
+<td>Number</td>
+<td>Specify the rate limit ceiling.<div>Default to <code>100</code>.</div>
+</td>
+</tr>
+<tr>
+<td>window</td>
+<td>Number</td>
+<td>Specify the time window in minutes.<div>Default to <code>15</code>.</div>
+</td>
+</tr>
+<tr>
+<td>enableHeaders</td>
+<td>Boolean</td>
+<td>Enable response headers (<code>X-Rate-Limit-Limit</code>, <code>X-Rate-Limit-Remaining</code>, <code>X-Rate-Limit-Reset</code>).<div>Default to <code>false</code>.</div>
+<div>With:<div>- <code>X-Rate-Limit-Limit</code>: the rate limit ceiling for that given request</div>
+<div>- <code>X-Rate-Limit-Remaining</code>: the number of requests left for the N minute window</div>
+<div>- <code>X-Rate-Limit-Reset</code>: the remaining window before the rate limit resets in UTC epoch seconds</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table><h2>
+<a name="run-tests" class="anchor" href="#run-tests"><span class="octicon octicon-link"></span></a>Run Tests</h2>
+
+<p>Tests are given complete coverage of all features.</p>
+
+<div class="highlight highlight-bash"><pre>  <span class="nv">$ </span>npm <span class="nb">test</span>
+</pre></div>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>To run examples, clone the Esecurity repo and install the example/test suite dependencies:</p>
+
+<pre><code>$ git clone git://github.com/math-nao/esecurity.git --depth 1
+$ cd esecurity
+$ npm install
+</code></pre>
+
+<p>then run any example:</p>
+
+<pre><code>$ node examples/cors
+</code></pre>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
+
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/math-nao/esecurity/trend.png" alt="Bitdeli Badge"></a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Esecurity maintained by <a href="https://github.com/math-nao">math-nao</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
