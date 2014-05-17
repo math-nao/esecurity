@@ -346,6 +346,3 @@ then run any example:
 MIT
 
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/math-nao/esecurity/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
