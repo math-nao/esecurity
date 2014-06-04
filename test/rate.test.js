@@ -57,8 +57,8 @@ describe('rate', function() {
             .get('/')
             .expect('x-rate-limit-limit', String(rateVal))
             .expect('x-rate-limit-remaining', String(Math.max(0, rateVal - 1)))
+            .expect(200)
             .end(function(err, res) {
-                res.should.have.status(200);
                 res.header['x-rate-limit-reset'].should.be.approximately(parseInt(Date.now() / 1E3) + windowVal, 5);
                 done();
             });
@@ -88,8 +88,8 @@ describe('rate', function() {
                 .set('Cookie', res.headers['set-cookie'][0].split(';')[0])
                 .expect('x-rate-limit-limit', String(rateVal))
                 .expect('x-rate-limit-remaining', String(Math.max(0, rateVal - 2)))
+                .expect(429)
                 .end(function(err, res) {
-                    res.should.have.status(429);
                     res.header['x-rate-limit-reset'].should.be.approximately(parseInt(Date.now() / 1E3) + windowVal, 5);
                     done();
                 });
