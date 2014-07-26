@@ -31,11 +31,14 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "express": "3.0.x",
-    "supertest": "0.6.x",
-    "should": "*",
-    "mocha": "*",
-    "dox": "*"
+    "express": "4.x",
+    "cookie-parser": "1.x",
+    "express-session": "1.x",
+    "body-parser": "1.x",
+    "supertest": "0.x",
+    "should": "4.x",
+    "mocha": "1.x",
+    "dox": "0.x"
   },
   "dependencies": {
     "generic-pool": "2.x"

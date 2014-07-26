@@ -1,5 +1,6 @@
 var esecurity = require("..");
 var express = require("express");
+var bodyParser = require('body-parser');
 var request = require("./support/http");
 
 describe("CSP", function() {
@@ -202,7 +203,7 @@ describe("CSP", function() {
             var app = express();
 
             var url = "/csp/report";
-            app.use(express.bodyParser());
+            app.use(bodyParser());
             app.use(esecurity.csp({
                 reportOnly: true,
                 reportUri: url
@@ -407,7 +408,7 @@ describe("CSP", function() {
             var app = express();
 
             var url = "/csp/report";
-            app.use(express.bodyParser());
+            app.use(bodyParser());
             app.use(esecurity.csp({
                 reportUri: url
             }));

@@ -1,14 +1,17 @@
 var esecurity = require('..');
 var express = require('express');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+var bodyParser = require('body-parser');
 var request = require('./support/http');
 
 describe('angularXsrf', function() {
     it('should work with a valid token', function(done) {
         var app = express();
 
-        app.use(express.cookieParser());
-        app.use(express.session({ secret: 'esecurity test' }));
-        app.use(express.bodyParser());
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
         app.use(esecurity.angularXsrf());
         
         app.use(function(req, res){
@@ -34,9 +37,9 @@ describe('angularXsrf', function() {
     it('should fail with an invalid token', function(done) {
         var app = express();
 
-        app.use(express.cookieParser());
-        app.use(express.session({ secret: 'esecurity test' }));
-        app.use(express.bodyParser());
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
         app.use(esecurity.angularXsrf());
         
         app.use(function(req, res){
@@ -62,9 +65,9 @@ describe('angularXsrf', function() {
     it('should fail with no token', function(done) {
         var app = express();
 
-        app.use(express.cookieParser());
-        app.use(express.session({ secret: 'esecurity test' }));
-        app.use(express.bodyParser());
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
         app.use(esecurity.angularXsrf());
         
         app.use(function(req, res){

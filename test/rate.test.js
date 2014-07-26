@@ -1,5 +1,7 @@
 var esecurity = require('..');
 var express = require('express');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 var request = require('./support/http');
 
 describe('rate', function() {
@@ -7,8 +9,8 @@ describe('rate', function() {
         it('should work with a valid rate limit', function(done) {
             var app = express();
             
-            app.use(express.cookieParser());
-            app.use(express.session({ secret: 'SECRET_KEY' }));
+            app.use(cookieParser());
+            app.use(expressSession({ secret: 'SECRET_KEY' }));
             
             app.get('/', esecurity.rate({ rate: 1, window: 4 }), function(req, res, next) {
                 res.end('Hello');
@@ -23,8 +25,8 @@ describe('rate', function() {
         it('should fail with a reached rate limit', function(done) {
             var app = express();
             
-            app.use(express.cookieParser());
-            app.use(express.session({ secret: 'SECRET_KEY' }));
+            app.use(cookieParser());
+            app.use(expressSession({ secret: 'SECRET_KEY' }));
 
             app.get('/', esecurity.rate({ rate: 1, window: 4 }), function(req, res, next) {
                 res.end('Hello');
@@ -45,8 +47,8 @@ describe('rate', function() {
         it('should work with a valid rate limit', function(done) {
             var app = express();
             
-            app.use(express.cookieParser());
-            app.use(express.session({ secret: 'SECRET_KEY' }));
+            app.use(cookieParser());
+            app.use(expressSession({ secret: 'SECRET_KEY' }));
 
             var rateVal = 1, windowVal = 4;
             app.get('/', esecurity.rate({ rate: rateVal, window: windowVal, enableHeaders: true }), function(req, res, next) {
@@ -68,8 +70,8 @@ describe('rate', function() {
         it('should fail with a reached rate limit', function(done) {
             var app = express();
             
-            app.use(express.cookieParser());
-            app.use(express.session({ secret: 'SECRET_KEY' }));
+            app.use(cookieParser());
+            app.use(expressSession({ secret: 'SECRET_KEY' }));
             
             var rateVal = 1, windowVal = 4;
             app.get('/', esecurity.rate({ rate: rateVal, window: windowVal, enableHeaders: true }), function(req, res, next) {

@@ -1,5 +1,6 @@
 var esecurity = require('..');
 var express = require('express');
+var bodyParser = require('body-parser');
 var request = require('./support/http');
 
 describe('filterReq', function() {
@@ -145,7 +146,7 @@ describe('filterReq', function() {
         it('should fail with a unsupported method', function(done) {
             var app = express();
 
-            app.use(express.bodyParser());
+            app.use(bodyParser());
             app.use(esecurity.filterReq({
                 method: function(method) {
                     return /^(GET|PUT|DELETE|OPTIONS|HEAD)$/i.test(method);
