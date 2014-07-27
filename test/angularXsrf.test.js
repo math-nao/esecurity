@@ -21,6 +21,9 @@ describe('angularXsrf', function() {
         request(app)
         .get('/')
         .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+
             var token = res.text;
             
             var requestApp = request(app).post('/');
@@ -49,6 +52,9 @@ describe('angularXsrf', function() {
         request(app)
         .get('/')
         .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+
             var token = "An invalid token";
             
             var requestApp = request(app).post('/');
@@ -77,6 +83,9 @@ describe('angularXsrf', function() {
         request(app)
         .get('/')
         .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+
             var token = "";
             
             var requestApp = request(app).post('/');
@@ -87,6 +96,201 @@ describe('angularXsrf', function() {
             
             requestApp.set('X-XSRF-Token', token)
             .expect(403, done);
+        });
+    });
+  
+    it('should not set token (option POST)', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf());
+        
+        app.use(function(req, res){console.log(req.method);
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .post('/')
+        .end(function(err, res) {
+            // should have session cookie
+            res.headers.should.have.property('set-cookie');
+
+            res.headers['set-cookie'].forEach(function(cookie) {
+                cookie.should.not.startWith('XSRF-TOKEN=');
+            });
+
+            done();
+        });
+    });
+  
+    it('should not set token (option VERB)', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf());
+        
+        app.use(function(req, res){console.log(req.method);
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .options('/')
+        .end(function(err, res) {
+            // should have session cookie
+            res.headers.should.have.property('set-cookie');
+
+            res.headers['set-cookie'].forEach(function(cookie) {
+                cookie.should.not.startWith('XSRF-TOKEN=');
+            });
+
+            done();
+        });
+    });
+  
+    it('should not set token (head VERB)', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf());
+        
+        app.use(function(req, res){console.log(req.method);
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .head('/')
+        .end(function(err, res) {
+            // should have session cookie
+            res.headers.should.have.property('set-cookie');
+
+            res.headers['set-cookie'].forEach(function(cookie) {
+                cookie.should.not.startWith('XSRF-TOKEN=');
+            });
+            
+            done();
+        });
+    });
+
+    it('should work with log option', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf({
+            log: function (msg) {
+                //console.log(msg);
+            }
+        }));
+        
+        app.use(function(req, res){
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .post('/')
+        .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+
+            var token = res.text;
+            
+            var requestApp = request(app).post('/');
+            
+            res.headers['set-cookie'].forEach(function(cookie) {
+                requestApp.set('Cookie', cookie);
+            });
+            
+            requestApp.set('X-XSRF-Token', token)
+            .expect(403, done);
+        });
+    });
+
+    it('should work with several instantiations', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf());
+        app.use(esecurity.angularXsrf());
+        app.use(esecurity.angularXsrf());
+        
+        app.use(function(req, res){
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .get('/')
+        .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+
+            var token = res.text;
+            
+            var requestApp = request(app).post('/');
+            
+            res.headers['set-cookie'].forEach(function(cookie) {
+                requestApp.set('Cookie', cookie);
+            });
+            
+            requestApp.set('X-XSRF-Token', token)
+            .expect(200, done);
+        });
+    });
+
+    it('should work with skip option', function(done) {
+        var app = express();
+
+        app.use(cookieParser());
+        app.use(expressSession({ secret: 'esecurity test' }));
+        app.use(bodyParser());
+        app.use(esecurity.angularXsrf({
+            skip: function (req, res) {
+                if (req.path == '/foobar')
+                    return true;
+
+                return false;
+            }
+        }));
+        
+        app.use(function(req, res){
+          res.end(req.xsrfToken() || 'none');
+        });
+
+        request(app)
+        .get('/foobar')
+        .end(function(err, res) {
+
+            res.headers.should.have.property('set-cookie');
+            
+            res.headers['set-cookie'].forEach(function(cookie) {
+                cookie.should.not.startWith('XSRF-TOKEN=');
+            });
+
+            request(app)
+            .get('/')
+            .end(function(err, res) {
+
+                res.headers.should.have.property('set-cookie');
+
+                var token = res.text;
+                
+                var requestApp = request(app).post('/');
+                
+                res.headers['set-cookie'].forEach(function(cookie) {
+                    requestApp.set('Cookie', cookie);
+                });
+                
+                requestApp.set('X-XSRF-Token', token)
+                .expect(200, done);
+            });
         });
     });
 });

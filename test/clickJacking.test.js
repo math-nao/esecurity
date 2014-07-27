@@ -3,6 +3,28 @@ var express = require('express');
 var request = require('./support/http');
 
 describe('clickJacking', function() {
+    it('should work with default options', function(done) {
+        var app = express();
+
+        app.use(esecurity.clickJacking());
+
+        request(app)
+        .get('/')
+        .expect('x-frame-options', 'DENY', done);
+    });
+
+    it('should work with several instantiations', function(done) {
+        var app = express();
+
+        app.use(esecurity.clickJacking());
+        app.use(esecurity.clickJacking());
+        app.use(esecurity.clickJacking());
+
+        request(app)
+        .get('/')
+        .expect('x-frame-options', 'DENY', done);
+    });
+
     it('should work with DENY', function(done) {
         var app = express();
 

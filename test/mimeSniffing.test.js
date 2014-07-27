@@ -12,5 +12,17 @@ describe('mimeSniffing', function() {
         .get('/')
         .expect('x-content-type-options', 'nosniff', done);
     });
+    
+    it('should work with several instantiations', function(done) {
+        var app = express();
+
+        app.use(esecurity.mimeSniffing());
+        app.use(esecurity.mimeSniffing());
+        app.use(esecurity.mimeSniffing());
+
+        request(app)
+        .get('/')
+        .expect('x-content-type-options', 'nosniff', done);
+    });
 });
 

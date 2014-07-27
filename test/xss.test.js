@@ -2,7 +2,7 @@ var esecurity = require('..');
 var express = require('express');
 var request = require('./support/http');
 
-describe('XSS', function() {    
+describe('XSS', function() {
     it('should work with block mode', function(done) {
         var app = express();
 
@@ -21,6 +21,18 @@ describe('XSS', function() {
         request(app)
         .get('/')
         .expect('x-xss-protection', '1', done);
+    });
+    
+    it('should work with several instantiations', function(done) {
+        var app = express();
+
+        app.use(esecurity.xss());
+        app.use(esecurity.xss());
+        app.use(esecurity.xss());
+
+        request(app)
+        .get('/')
+        .expect('x-xss-protection', '1;mode=block', done);
     });
 });
 

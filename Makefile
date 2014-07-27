@@ -1,4 +1,4 @@
-MOCHA_OPTS= --require should --check-leaks --globals "setImmediate,clearImmediate"
+MOCHA_OPTS= --require should --timeout 7000 --check-leaks --globals "setImmediate,clearImmediate"
 REPORTER = dot
 
 check: test
@@ -15,7 +15,6 @@ test-travis:
 	@NODE_ENV=test node \
                 node_modules/.bin/istanbul cover \
                 ./node_modules/.bin/_mocha \
-                --report lcovonly \
                 -- -u exports \
                 $(MOCHA_OPTS) \
                 --bail
