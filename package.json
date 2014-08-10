@@ -1,7 +1,7 @@
 {
   "name": "esecurity",
   "description": "Add security layers to express.",
-  "version": "0.1.2",
+  "version": "1.0.1",
   "author": "Mathieu Naouache <math.nao@outlook.com>",
   "keywords": [
     "express",
@@ -9,7 +9,7 @@
     "middleware"
   ],
   "engines": {
-    "node": ">=0.6"
+    "node": ">=0.8"
   },
   "homepage": "https://github.com/math-nao/esecurity/",
   "repository": {
