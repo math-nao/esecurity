@@ -3,14 +3,14 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('./support/http');
 
-describe('filterReq', function() {
-    describe('basic option', function() {
-        it('should work with default option', function(done) {
+describe('filterReq', function () {
+    describe('basic option', function () {
+        it('should work with default option', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq());
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -20,14 +20,14 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with several instantiations', function(done) {
+        it('should fail with several instantiations', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq());
             app.use(esecurity.filterReq());
             app.use(esecurity.filterReq());
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -37,7 +37,7 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with log option', function(done) {
+        it('should fail with log option', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
@@ -46,7 +46,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -57,12 +57,12 @@ describe('filterReq', function() {
         });
     });
 
-    describe('host option', function() {
-        it('should work with a valid host header', function(done) {
+    describe('host option', function () {
+        it('should work with a valid host header', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                host: function(host) {
+                host: function (host) {
                     return /^www\.domain\.com$/.test(host);
                 },
                 log: function (msg) {
@@ -70,7 +70,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -80,11 +80,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported host', function(done) {
+        it('should fail with a unsupported host', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                host: function(host) {
+                host: function (host) {
                     return /^www\.domain\.com$/.test(host);
                 },
                 log: function (msg) {
@@ -92,7 +92,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -103,12 +103,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('useragent option', function() {
-        it('should work with a valid user-agent header', function(done) {
+    describe('useragent option', function () {
+        it('should work with a valid user-agent header', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                agent: function(agent) {
+                agent: function (agent) {
                     return /^esecurity$/.test(agent);
                 },
                 log: function (msg) {
@@ -116,7 +116,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -126,11 +126,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported user-agent header', function(done) {
+        it('should fail with a unsupported user-agent header', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                agent: function(agent) {
+                agent: function (agent) {
                     return /^esecurity$/.test(agent);
                 },
                 log: function (msg) {
@@ -138,7 +138,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -149,12 +149,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('referer option', function() {
-        it('should work with a valid referer header', function(done) {
+    describe('referer option', function () {
+        it('should work with a valid referer header', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                referer: function(referer) {
+                referer: function (referer) {
                     return !/^evil\.com$/.test(referer);
                 },
                 log: function (msg) {
@@ -162,7 +162,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -172,11 +172,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported referer header', function(done) {
+        it('should fail with a unsupported referer header', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                referer: function(referer) {
+                referer: function (referer) {
                     return !/^evil\.com$/.test(referer);
                 },
                 log: function (msg) {
@@ -184,7 +184,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -195,12 +195,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('method option', function() {
-        it('should work with a valid method', function(done) {
+    describe('method option', function () {
+        it('should work with a valid method', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                method: function(method) {
+                method: function (method) {
                     return /^(GET|PUT|DELETE|OPTIONS|HEAD)$/i.test(method);
                 },
                 log: function (msg) {
@@ -208,7 +208,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -217,12 +217,15 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported method', function(done) {
+        it('should fail with a unsupported method', function (done) {
             var app = express();
 
-            app.use(bodyParser());
+            app.use(bodyParser.json());
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }));
             app.use(esecurity.filterReq({
-                method: function(method) {
+                method: function (method) {
                     return /^(GET|PUT|DELETE|OPTIONS|HEAD)$/i.test(method);
                 },
                 log: function (msg) {
@@ -230,7 +233,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -240,12 +243,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('url option', function() {
-        it('should work with a valid url', function(done) {
+    describe('url option', function () {
+        it('should work with a valid url', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                url: function(url) {
+                url: function (url) {
                     return !/^\/private/i.test(url);
                 },
                 log: function (msg) {
@@ -253,7 +256,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -262,11 +265,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported url', function(done) {
+        it('should fail with a unsupported url', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                url: function(url) {
+                url: function (url) {
                     return !/^\/private/i.test(url);
                 },
                 log: function (msg) {
@@ -274,7 +277,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -284,12 +287,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('ip option', function() {
-        it('should work with a valid ip', function(done) {
+    describe('ip option', function () {
+        it('should work with a valid ip', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                ip: function(ip) {
+                ip: function (ip) {
                     return /^127\.0\.0\.1$/i.test(ip);
                 },
                 log: function (msg) {
@@ -297,7 +300,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -306,11 +309,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported ip', function(done) {
+        it('should fail with a unsupported ip', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                ip: function(ip) {
+                ip: function (ip) {
                     return /^10\.0\.0\.1$/i.test(ip);
                 },
                 log: function (msg) {
@@ -318,7 +321,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -328,12 +331,12 @@ describe('filterReq', function() {
         });
     });
     
-    describe('custom option', function() {
-        it('should work with a valid custom data', function(done) {
+    describe('custom option', function () {
+        it('should work with a valid custom data', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                custom: function(req, res) {
+                custom: function (req, res) {
                     var isAjaxUrl = /^\/ajax/.test(req.url);
                     return !isAjaxUrl || (isAjaxUrl && req.xhr);
                 },
@@ -342,7 +345,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -352,11 +355,11 @@ describe('filterReq', function() {
             .expect(200, done);
         });
       
-        it('should fail with a unsupported custom data', function(done) {
+        it('should fail with a unsupported custom data', function (done) {
             var app = express();
 
             app.use(esecurity.filterReq({
-                custom: function(req, res) {
+                custom: function (req, res) {
                     var isAjaxUrl = /^\/ajax/.test(req.url);
                     return !isAjaxUrl || (isAjaxUrl && req.xhr);
                 },
@@ -365,7 +368,7 @@ describe('filterReq', function() {
                 }
             }));
         
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 

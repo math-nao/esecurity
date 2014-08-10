@@ -2,8 +2,8 @@ var esecurity = require('..');
 var express = require('express');
 var request = require('./support/http');
 
-describe('mimeSniffing', function() {
-    it('should work', function(done) {
+describe('mimeSniffing', function () {
+    it('should work', function (done) {
         var app = express();
 
         app.use(esecurity.mimeSniffing());
@@ -13,7 +13,7 @@ describe('mimeSniffing', function() {
         .expect('x-content-type-options', 'nosniff', done);
     });
     
-    it('should work with several instantiations', function(done) {
+    it('should work with several instantiations', function (done) {
         var app = express();
 
         app.use(esecurity.mimeSniffing());

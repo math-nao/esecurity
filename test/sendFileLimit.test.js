@@ -2,8 +2,8 @@ var esecurity = require('..');
 var express = require('express');
 var request = require('./support/http');
 
-/*describe('sendFileLimit', function() {
-    it('should work with a valid zone limit', function(done) {
+/*describe('sendFileLimit', function () {
+    it('should work with a valid zone limit', function (done) {
         var app = express();
 
         app.use(esecurity.zoneLimit({
@@ -17,7 +17,7 @@ var request = require('./support/http');
         
     });
   
-    it('should fail with a zone limit reached', function(done) {
+    it('should fail with a zone limit reached', function (done) {
         var app = express();
 
         app.use(esecurity.zoneLimit({
@@ -27,7 +27,7 @@ var request = require('./support/http');
 
         request(app)
         .get('/')
-        .end(function(err, res) {
+        .end(function (err, res) {
             request(app)
             .get('/')
             .expect(403, done);

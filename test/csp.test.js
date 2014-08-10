@@ -350,7 +350,10 @@ describe("CSP", function () {
             var app = express();
 
             var url = "/csp/report";
-            app.use(bodyParser());
+            app.use(bodyParser.json());
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }));
             app.use(esecurity.csp({
                 reportOnly: true,
                 reportUri: url
@@ -615,7 +618,10 @@ describe("CSP", function () {
             var app = express();
 
             var url = "/csp/report";
-            app.use(bodyParser());
+            app.use(bodyParser.json());
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }));
             app.use(esecurity.csp({
                 reportUri: url
             }));

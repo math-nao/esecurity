@@ -2,15 +2,15 @@ var esecurity = require('..');
 var express = require('express');
 var request = require('./support/http');
 
-describe('cors', function() {
-    describe('with credentials', function() {
-        it('should work with default options', function(done) {
+describe('cors', function () {
+    describe('with credentials', function () {
+        it('should work with default options', function (done) {
 
             var app = express();
 
             app.use(esecurity.cors());
     
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -18,7 +18,7 @@ describe('cors', function() {
             .get('/')
             .expect(200, done);
         });
-        it('should work with several instantiations', function(done) {
+        it('should work with several instantiations', function (done) {
 
             var app = express();
 
@@ -26,7 +26,7 @@ describe('cors', function() {
             app.use(esecurity.cors());
             app.use(esecurity.cors());
     
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -35,7 +35,7 @@ describe('cors', function() {
             .expect(200, done);
         });
 
-        it('should fail with a invalid method', function(done) {
+        it('should fail with a invalid method', function (done) {
             var app = express();
 
             var originAllowed = 'http://domain.com';
@@ -44,7 +44,7 @@ describe('cors', function() {
                 methods: ['POST']
             }));
     
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -52,14 +52,13 @@ describe('cors', function() {
             .options('/')
             .set('Origin', originAllowed)
             .set('Access-Control-Request-Method', 'PUT')
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.headers.should.not.have.property('access-control-allow-methods', 'PUT');
-                console.log(res.status);
                 done();
             });
         });
 
-        it('should fail with a invalid request header', function(done) {
+        it('should fail with a invalid request header', function (done) {
             var app = express();
 
             var originAllowed = 'http://domain.com';
@@ -69,7 +68,7 @@ describe('cors', function() {
                 headers: ['X-PINGOTHER']
             }));
     
-            app.use(function(req, res){
+            app.use(function (req, res) {
               res.end('none');
             });
 
@@ -78,17 +77,16 @@ describe('cors', function() {
             .set('Origin', originAllowed)
             .set('Access-Control-Request-Method', 'GET')
             .set('Access-Control-Request-Headers', 'X-FOOBAR')
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.headers.should.not.have.property('access-control-allow-headers', 'X-FOOBAR');
-                console.log(res.status);
                 done();
             });
         });
     });
 
-    describe('with credentials', function() {
-        describe('preflight request', function() {
-            it('should work with a valid request', function(done) {
+    describe('with credentials', function () {
+        describe('preflight request', function () {
+            it('should work with a valid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -101,7 +99,7 @@ describe('cors', function() {
                     maxAge: 60
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -118,7 +116,7 @@ describe('cors', function() {
                 .expect(204, done);
             });
 
-            it('should work with methods, headers and exposeHeaders options as string', function(done) {
+            it('should work with methods, headers and exposeHeaders options as string', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -131,7 +129,7 @@ describe('cors', function() {
                     maxAge: 60
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -148,7 +146,7 @@ describe('cors', function() {
                 .expect(204, done);
             });
           
-            it('should fail with an invalid request', function(done) {
+            it('should fail with an invalid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -161,14 +159,14 @@ describe('cors', function() {
                     maxAge: 60
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
                 request(app)
                 .options('/')
                 .set('Origin', 'http://evil.com')
-                .end(function(err, res) {
+                .end(function (err, res) {
                     res.headers.should.not.have.property('access-control-allow-credentials');
                     res.headers.should.not.have.property('access-control-request-methods');
                     res.headers.should.not.have.property('access-control-request-headers');
@@ -181,8 +179,8 @@ describe('cors', function() {
             });
         });
         
-        describe('desired request', function() {
-            it('should work with a valid request', function(done) {
+        describe('desired request', function () {
+            it('should work with a valid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -191,7 +189,7 @@ describe('cors', function() {
                     credentials: true
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -202,7 +200,7 @@ describe('cors', function() {
                 .expect('access-control-allow-credentials', 'true', done);
             });
 
-            it('should work with methods, headers and exposeHeaders options as string', function(done) {
+            it('should work with methods, headers and exposeHeaders options as string', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -214,7 +212,7 @@ describe('cors', function() {
                     credentials: true
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -225,7 +223,7 @@ describe('cors', function() {
                 .expect('access-control-allow-credentials', 'true', done);
             });
           
-            it('should fail with an invalid request', function(done) {
+            it('should fail with an invalid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -234,14 +232,14 @@ describe('cors', function() {
                     credentials: true
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
                 request(app)
                 .get('/')
                 .set('Origin', 'http://evil.com')
-                .end(function(err, res) {
+                .end(function (err, res) {
                     res.headers.should.not.have.property('access-control-allow-origin');
                     res.headers.should.not.have.property('access-control-allow-credentials');
                     done();
@@ -250,9 +248,9 @@ describe('cors', function() {
         });
     });
     
-    describe('without credentials', function() {
-        describe('preflight request', function() {
-            it('should work with a valid request', function(done) {
+    describe('without credentials', function () {
+        describe('preflight request', function () {
+            it('should work with a valid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -264,7 +262,7 @@ describe('cors', function() {
                     maxAge: 60
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -277,14 +275,10 @@ describe('cors', function() {
                 .expect('access-control-allow-headers', 'X-PINGOTHER')
                 .expect('access-control-max-age', '60')
                 .expect('access-control-allow-origin', originAllowed)
-                .expect(204, done)
-                /*.end(function(err, res) {
-                    console.log(res.headers);
-                    done();
-                });*/
+                .expect(204, done);
             });
           
-            it('should fail with an invalid request', function(done) {
+            it('should fail with an invalid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -296,14 +290,14 @@ describe('cors', function() {
                     maxAge: 60
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
                 request(app)
                 .options('/')
                 .set('Origin', 'http://evil.com')
-                .end(function(err, res) {
+                .end(function (err, res) {
                     res.headers.should.not.have.property('access-control-allow-origin');
                     res.headers.should.not.have.property('access-control-request-method');
                     res.headers.should.not.have.property('access-control-request-headers');
@@ -315,8 +309,8 @@ describe('cors', function() {
             });
         });
         
-        describe('desired request', function() {
-            it('should work with a valid request', function(done) {
+        describe('desired request', function () {
+            it('should work with a valid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -324,7 +318,7 @@ describe('cors', function() {
                     origin: originAllowed
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
@@ -334,7 +328,7 @@ describe('cors', function() {
                 .expect('Access-Control-Allow-Origin', originAllowed, done);
             });
           
-            it('should fail with an invalid request', function(done) {
+            it('should fail with an invalid request', function (done) {
                 var app = express();
 
                 var originAllowed = 'http://domain.com';
@@ -342,14 +336,14 @@ describe('cors', function() {
                     origin: originAllowed
                 }));
         
-                app.use(function(req, res){
+                app.use(function (req, res) {
                   res.end('none');
                 });
 
                 request(app)
                 .get('/')
                 .set('Origin', 'http://evil.com')
-                .end(function(err, res) {
+                .end(function (err, res) {
                     res.headers.should.not.have.property('access-control-allow-origin');
                     done();
                 });
