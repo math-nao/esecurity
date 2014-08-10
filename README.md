@@ -1,4 +1,4 @@
-# esecurity [![Build Status](https://secure.travis-ci.org/math-nao/esecurity.png)](http://travis-ci.org/math-nao/esecurity) [![NPM version](https://badge.fury.io/js/esecurity.svg)](http://badge.fury.io/js/esecurity)
+# esecurity [![NPM version][npm-image]][npm-url] [![Build status][travis-image]][travis-url] [![License][license-image]][license-url]
 
 Security middlewares for express framework (xsrf, xss, clickjacking...).
 
@@ -345,4 +345,12 @@ then run any example:
 
 MIT
 
+[npm-image]: https://img.shields.io/npm/v/esecurity.svg?style=flat
+[npm-url]: https://npmjs.org/package/esecurity
+[travis-image]: https://img.shields.io/travis/math-nao/esecurity/1.0.1.svg?style=flat
+[travis-url]: https://travis-ci.org/math-nao/esecurity
+[coveralls-image]: https://img.shields.io/coveralls/math-nao/esecurity.svg?style=flat
+[coveralls-url]: https://coveralls.io/r/math-nao/esecurity?branch=1.0.1
+[license-image]: http://img.shields.io/npm/l/esecurity.svg?style=flat
+[license-url]: https://github.com/math-nao/esecurity/blob/1.0.1/LICENSE
 
