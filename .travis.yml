@@ -5,6 +5,10 @@ node_js:
   - 0.10
   - 0.8
 
+script: "make test-travis"
+
+after_script: "npm install coveralls@2.11.1 && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+
 notifications:
   email:
     - math.nao@outlook.com

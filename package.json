@@ -38,6 +38,7 @@
     "supertest": "0.x",
     "should": "4.x",
     "mocha": "1.x",
+    "istanbul": "0.x",
     "dox": "0.x"
   },
   "dependencies": {
