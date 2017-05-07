@@ -22,8 +22,8 @@
   "license": "MIT",
   "licenses": [
     {
-        "type": "MIT",
-        "url": "http://www.opensource.org/licenses/mit-license.php"
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
   "main": "index",
@@ -31,15 +31,15 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "express": "4.x",
-    "cookie-parser": "1.x",
-    "express-session": "1.x",
-    "body-parser": "1.x",
-    "supertest": "0.x",
-    "should": "4.x",
-    "mocha": "1.x",
-    "istanbul": "0.x",
-    "dox": "0.x"
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "dox": "^0.9.0",
+    "express": "^4.15.2",
+    "express-session": "^1.15.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.3.0",
+    "should": "^11.2.1",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "generic-pool": "2.x"
@@ -48,4 +48,3 @@
     "test": "make"
   }
 }
-

@@ -243,7 +243,7 @@ describe('angularXsrf', function () {
         });
 
         request(app)
-        .post('/')
+        .get('/')
         .end(function (err, res) {
             
             res.headers.should.have.property('set-cookie');

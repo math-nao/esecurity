@@ -293,7 +293,7 @@ describe('filterReq', function () {
 
             app.use(esecurity.filterReq({
                 ip: function (ip) {
-                    return /^127\.0\.0\.1$/i.test(ip);
+                    return /^(?:127\.0\.0\.1|::ffff:127\.0\.0\.1)$/i.test(ip);
                 },
                 log: function (msg) {
                     //console.log(msg);

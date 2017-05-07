@@ -94,6 +94,11 @@ describe("CSP", function () {
                 reportOnly: true
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "", done);
@@ -106,6 +111,11 @@ describe("CSP", function () {
                 headers: ["experimental"],
                 reportOnly: true
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -120,6 +130,11 @@ describe("CSP", function () {
                 headers: ["standard", "experimental"],
                 reportOnly: true
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -136,6 +151,11 @@ describe("CSP", function () {
                 objectSrc: ['none']
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "object-src 'none'", done);
@@ -148,6 +168,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 objectSrc: ['self']
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -162,6 +187,11 @@ describe("CSP", function () {
                 objectSrc: ['unsafe-inline']
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "object-src 'unsafe-inline'", done);
@@ -174,6 +204,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 objectSrc: ['unsafe-eval']
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -188,6 +223,11 @@ describe("CSP", function () {
                 objectSrc: 'unsafe-eval'
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "object-src 'unsafe-eval'", done);
@@ -200,6 +240,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 rules_secure: true
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -215,6 +260,11 @@ describe("CSP", function () {
                 scriptSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "script-src " + src.join(" "), done);
@@ -228,6 +278,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 objectSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -243,6 +298,11 @@ describe("CSP", function () {
                 styleSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "style-src " + src.join(" "), done);
@@ -256,6 +316,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 imgSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -271,6 +336,11 @@ describe("CSP", function () {
                 mediaSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "media-src " + src.join(" "), done);
@@ -284,6 +354,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 frameSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -299,6 +374,11 @@ describe("CSP", function () {
                 fontSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "font-src " + src.join(" "), done);
@@ -312,6 +392,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 connectSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -327,6 +412,11 @@ describe("CSP", function () {
                 sandbox: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy-report-only", "sandbox " + src.join(" "), done);
@@ -340,6 +430,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 reportUri: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -358,6 +453,11 @@ describe("CSP", function () {
                 reportOnly: true,
                 reportUri: url
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .post(url)
@@ -380,6 +480,11 @@ describe("CSP", function () {
 
             app.use(esecurity.csp());
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "", done);
@@ -391,6 +496,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 headers: ["experimental"]
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -404,6 +514,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 headers: ["standard", "experimental"]
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -419,6 +534,11 @@ describe("CSP", function () {
                 objectSrc: ['none']
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "object-src 'none'", done);
@@ -430,6 +550,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 objectSrc: ['self']
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -443,6 +568,11 @@ describe("CSP", function () {
                 objectSrc: ['unsafe-inline']
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "object-src 'unsafe-inline'", done);
@@ -454,6 +584,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 objectSrc: ['unsafe-eval']
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -467,6 +602,11 @@ describe("CSP", function () {
                 objectSrc: 'unsafe-eval'
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "object-src 'unsafe-eval'", done);
@@ -478,6 +618,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 rules_secure: true
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -492,6 +637,11 @@ describe("CSP", function () {
                 scriptSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "script-src " + src.join(" "), done);
@@ -504,6 +654,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 objectSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -518,6 +673,11 @@ describe("CSP", function () {
                 styleSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "style-src " + src.join(" "), done);
@@ -530,6 +690,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 imgSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -544,12 +709,18 @@ describe("CSP", function () {
                 mediaSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "media-src " + src.join(" "), done);
         });
         
         it("should work with frame-src", function (done) {
+
             var app = express();
 
             var src = ["'self'", "http://www.example.org/js/*"];
@@ -557,8 +728,13 @@ describe("CSP", function () {
                 frameSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
-            .get("/")
+            .get('/')
             .expect("content-security-policy", "frame-src " + src.join(" "), done);
         });
         
@@ -569,6 +745,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 fontSrc: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -583,6 +764,11 @@ describe("CSP", function () {
                 connectSrc: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "connect-src " + src.join(" "), done);
@@ -596,6 +782,11 @@ describe("CSP", function () {
                 sandbox: src
             }));
 
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
             request(app)
             .get("/")
             .expect("content-security-policy", "sandbox " + src.join(" "), done);
@@ -608,6 +799,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 reportUri: src
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .get("/")
@@ -625,6 +821,11 @@ describe("CSP", function () {
             app.use(esecurity.csp({
                 reportUri: url
             }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
 
             request(app)
             .post(url)
