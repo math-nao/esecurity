@@ -3,24 +3,20 @@ REPORTER = dot
 
 check: test
 
-test: test-unit
+test: test-cov
 
 test-unit:
 	@NODE_ENV=test ./node_modules/.bin/mocha --reporter $(REPORTER) $(MOCHA_OPTS)
 
-test-cov: lib-cov
-	@ESECURITY_COV=1 $(MAKE) test REPORTER=html-cov > docs/coverage.html
+test-travis: test-cov
 
-test-travis:
+test-cov:
 	@NODE_ENV=test node \
                 node_modules/.bin/istanbul cover \
                 ./node_modules/.bin/_mocha \
                 -- -u exports \
                 $(MOCHA_OPTS) \
                 --bail
-
-lib-cov:
-	jscoverage lib lib-cov
 	
 docs: test-docs
 
