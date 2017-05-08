@@ -1,6 +1,7 @@
 coverage.html
 coverage
 lib-cov
+docs/*.html
 .coverage_data
 cover_html
 .DS_Store
