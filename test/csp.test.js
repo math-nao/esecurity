@@ -840,6 +840,28 @@ describe("CSP", function () {
             })
             .expect(200, done);
         });
+        
+        it("should work with posting empty data to report-uri", function (done) {
+            var app = express();
+
+            var url = "/csp/report";
+            app.use(bodyParser.json());
+            app.use(bodyParser.urlencoded({
+                extended: true
+            }));
+            app.use(esecurity.csp({
+                reportUri: url
+            }));
+
+            app.use(function (req, res, next) {
+                res.send('none').end();
+                return next();
+            });
+
+            request(app)
+            .post(url)
+            .expect(200, done);
+        });
     });
 });
 
