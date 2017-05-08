@@ -16,3 +16,5 @@ app.use(function(req, res){
 
 app.listen(9898);
 
+console.log('Listening on port 9898...');
+

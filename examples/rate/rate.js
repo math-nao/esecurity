@@ -14,3 +14,5 @@ app.get('/', esecurity.rate({ rate: 2, window: 5, enableHeaders: true }), functi
 
 app.listen(9898);
 
+console.log('Listening on port 9898...');
+
