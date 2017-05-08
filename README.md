@@ -347,10 +347,10 @@ MIT
 
 [npm-image]: https://img.shields.io/npm/v/esecurity.svg?style=flat
 [npm-url]: https://npmjs.org/package/esecurity
-[travis-image]: https://img.shields.io/travis/math-nao/esecurity/1.0.1.svg?style=flat
+[travis-image]: https://img.shields.io/travis/math-nao/esecurity/2.0.0.svg?style=flat
 [travis-url]: https://travis-ci.org/math-nao/esecurity
 [coveralls-image]: https://img.shields.io/coveralls/math-nao/esecurity.svg?style=flat
-[coveralls-url]: https://coveralls.io/r/math-nao/esecurity?branch=1.0.1
+[coveralls-url]: https://coveralls.io/r/math-nao/esecurity?branch=2.0.0
 [license-image]: http://img.shields.io/npm/l/esecurity.svg?style=flat
-[license-url]: https://github.com/math-nao/esecurity/blob/1.0.1/LICENSE
+[license-url]: https://github.com/math-nao/esecurity/blob/2.0.0/LICENSE
 
