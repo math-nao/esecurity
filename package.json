@@ -45,6 +45,6 @@
     "generic-pool": "2.x"
   },
   "scripts": {
-    "test": "make"
+    "test": "make test"
   }
 }
