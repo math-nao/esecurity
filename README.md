@@ -134,7 +134,7 @@ __Options__
 XSRF is a technique by which an unauthorized site can gain your user's private data.
 
 ``` js
-    var esecurity = require('../..');
+    var esecurity = require('esecurity');
     var express = require('express');
     var cookieParser = require('cookie-parser');
     var expressSession = require('express-session');
@@ -371,5 +371,5 @@ MIT
 [coveralls-image]: https://img.shields.io/coveralls/math-nao/esecurity.svg?style=flat
 [coveralls-url]: https://coveralls.io/r/math-nao/esecurity?branch=2.0.0
 [license-image]: http://img.shields.io/npm/l/esecurity.svg?style=flat
-[license-url]: https://github.com/math-nao/esecurity/blob/2.0.0/LICENSE
+[license-url]: https://github.com/math-nao/esecurity/blob/master/LICENSE
 
