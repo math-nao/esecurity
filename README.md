@@ -134,18 +134,40 @@ __Options__
 XSRF is a technique by which an unauthorized site can gain your user's private data.
 
 ``` js
-    var esecurity = require('esecurity');
+    var esecurity = require('../..');
     var express = require('express');
+    var cookieParser = require('cookie-parser');
+    var expressSession = require('express-session');
+    var bodyParser = require('body-parser');
 
     var app = express();
 
-    app.use(express.cookieParser());
-    app.use(express.session({ secret: 'esecurity example' }));
-    app.use(express.bodyParser());
+    app.use(cookieParser());
 
-    app.use(esecurity.xsrf());
+    app.use(expressSession({
+        resave: false,
+        saveUninitialized: false,
+        secret: 'esecurity example'
+    }));
 
-    app.use(function(req, res){
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+
+    app.use(esecurity.xsrf({
+        skip: function (req, res) {
+            return /^\/noxsrf/i.test(req.url);
+        },
+        cookie: {
+            path: '/',
+            secure: false
+        }
+    }));
+
+    app.get('/api/xsrf.json', function(req, res, next){
+        res.json({ 'xsrf': req.xsrfToken() });
+    });
+
+    app.get('/', function(req, res, next){
         res.end('Hello world.');
     });
 
@@ -160,7 +182,7 @@ Name | Value | Description
 ------ | ----- | -----------
 skip | Function, Boolean | Optional directive skipping angularXsrf module if function return `true`.<br />Default to `function(req, res) {};`.
 cookieName | String | Optional.  Specify the cookie name. If empty, xsrf token will not be passed by cookie.<br />Default to an empty string.
-angular | Boolean | Optional. Shortname for `cookiname: 'XSRF-TOKEN'` will support Angular xsrf handling.<br />Default to `false`.
+angular | Boolean | Optional. Shortname for `cookiName: 'XSRF-TOKEN'` will support Angular xsrf handling.<br />Default to `false`.
 cookie | Object | Optional. Specify cookie options used in <a href="http://expressjs.com/api.html#res.cookie" target="_blank">res.cookie</a>.<br />Default to `{}`.
 
 ### Content Security Policy (CSP)
